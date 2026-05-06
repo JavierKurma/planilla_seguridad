@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planilla</title>
+
+<style>
+body { font-family: Arial; padding: 10px; background: #f4f4f4; }
+input, textarea, select { width: 100%; margin: 5px 0; padding: 8px; }
+button { padding: 10px; margin-top: 10px; width: 100%; }
+.obs-block { border: 1px solid #ccc; padding: 10px; margin-top: 10px; background: white; }
+</style>
+
+</head>
+<body>
+
+<h2>Planilla Seguridad</h2>
+
+<form id="form" enctype="multipart/form-data">
+
+<select name="obra">
+  <option value="">Obra</option>
+  <option value="Distrito">Distrito</option>
+</select>
+
+<select name="empresa">
+  <option value="">Empresa</option>
+  <option value="Astori">Astori</option>
+</select>
+
+<select name="registro" multiple>
+  <option value="IV">IV</option>
+  <option value="PT">PT</option>
+  <option value="C">C</option>
+</select>
+
+<input type="date" name="fecha">
+<input type="time" name="inicio">
+<input type="time" name="final">
+
+<select name="auditor">
+  <option value="Facundo">Facundo</option>
+</select>
+
+<textarea name="actividades" placeholder="Actividades + Obs anteriores"></textarea>
+<textarea name="aspectos" placeholder="Aspectos positivos"></textarea>
+
+<h3>Observaciones</h3>
+
+<div id="observaciones"></div>
+
+<button type="button" onclick="agregarObs()">+ Agregar Observación</button>
+
+<input type="file" name="archivos" multiple>
+
+<button type="submit">Guardar</button>
+
+
+</form>
+
+<script>
+let contador = 0;
+
+function agregarObs() {
+  const container = document.getElementById("observaciones");
+
+  const div = document.createElement("div");
+  div.className = "obs-block";
+
+  div.innerHTML = `
+    <textarea name="obs_${contador}" placeholder="Observación"></textarea>
+    <input name="rec_${contador}" placeholder="Recomendación">
+    <input name="plazo_${contador}" placeholder="Plazo">
+    <input name="resp_${contador}" placeholder="Responsable">
+    <input type="number" name="ca_${contador}" placeholder="CA">
+    <input type="number" name="ao_${contador}" placeholder="AO">
+  `;
+
+  container.appendChild(div);
+  contador++;
+}
+
+// agregar una por defecto
+agregarObs();
+
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  const res = await fetch("/guardar", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  alert(data.mensaje);
+});
+</script>
+
+</body>
+</html>
