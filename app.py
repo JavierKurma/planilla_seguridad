@@ -138,7 +138,7 @@ def guardar():
     db.session.commit()
 
     return jsonify({"mensaje": "Guardado correctamente"})
-"""
+
 @app.route("/registros")
 def ver_registros():
     registros = Registro.query.all()
@@ -155,7 +155,7 @@ def ver_registros():
         })
 
     return jsonify(resultado)
-"""
+
 @app.route("/panel")
 def panel():
     clave = request.args.get("key")
